@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DuplicateFileFinder.Interface
 {
-    static class Program
+    static class StartUp
     {
         /// <summary>
         /// The main entry point for the application.
@@ -16,7 +13,7 @@ namespace DuplicateFileFinder.Interface
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainForm());
         }
     }
 }
