@@ -2,7 +2,7 @@
 
 namespace DuplicateFileFinder.Models
 {
-    public class FSEntity
+    public class FileSystemEntity
     {
         public string Name { get; set; }
 
@@ -10,18 +10,18 @@ namespace DuplicateFileFinder.Models
 
         public bool IsFolder { get; set; }
 
-        public ICollection<FSEntity> Children { get; set; }
+        public ICollection<FileSystemEntity> Children { get; set; }
 
-        public FSEntity Parent { get; set; }
+        public FileSystemEntity Parent { get; set; }
 
-        public FSEntity()
+        public FileSystemEntity()
         {
             this.IsFolder = false;
-            this.Children = new HashSet<FSEntity>();
+            this.Children = new HashSet<FileSystemEntity>();
             this.Parent = null;
         }
 
-        public FSEntity(string name, string hash, bool isFolder, ICollection<FSEntity> children, FSEntity parent)
+        public FileSystemEntity(string name, string hash, bool isFolder, ICollection<FileSystemEntity> children, FileSystemEntity parent)
             : this()
         {
             this.Name = name;
