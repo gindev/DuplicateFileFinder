@@ -1,7 +1,6 @@
 ﻿using DuplicateFileFinder.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace DuplicateFileFinder.Interface

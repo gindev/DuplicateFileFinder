@@ -226,6 +226,7 @@
             // 
             this.tbFolder1.Location = new System.Drawing.Point(7, 20);
             this.tbFolder1.Name = "tbFolder1";
+            this.tbFolder1.ReadOnly = true;
             this.tbFolder1.Size = new System.Drawing.Size(352, 20);
             this.tbFolder1.TabIndex = 0;
             // 
