@@ -7,13 +7,14 @@ namespace DuplicateFileFinder.Interface
 {
     public partial class MainForm : Form
     {
-        public Dictionary<string,HashSet<FileSystemEntity>> Duplicates { get; set; }
+        public Dictionary<string,List<FileSystemEntity>> Duplicates { get; set; }
 
         public MainForm()
         {
-            this.Duplicates = new Dictionary<string, HashSet<FileSystemEntity>>();
+            this.Duplicates = new Dictionary<string, List<FileSystemEntity>>();
 
             InitializeComponent();
+
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -50,7 +51,8 @@ namespace DuplicateFileFinder.Interface
         {
             this.Duplicates.Clear();
             this.lvDuplicates.Items.Clear();
-
+            
+            Actions.TraverseDirectories(this.tbFolder1.Text, this.Duplicates);
         }
     }
 }

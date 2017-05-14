@@ -1,46 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace DuplicateFileFinder.Models
 {
     public class FileSystemEntity
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
-        public string Hash { get; set; }
+        public string Hash { get; private set; }
 
-        public bool IsFolder { get; set; }
+        public string Path { get; private set; }
 
-        public ICollection<FileSystemEntity> Children { get; set; }
-
-        public FileSystemEntity Parent { get; set; }
-
-        public FileSystemEntity()
-        {
-            this.IsFolder = false;
-            this.Children = new HashSet<FileSystemEntity>();
-            this.Parent = null;
-        }
-
-        public FileSystemEntity(string name, string hash, bool isFolder, ICollection<FileSystemEntity> children, FileSystemEntity parent)
-            : this()
+        public FileSystemEntity(string name, string path)
         {
             this.Name = name;
-            this.Hash = hash;
 
-            if (isFolder)
-            {
-                this.IsFolder = isFolder;
-            }
+            this.Path = path;
 
-            if(children != null)
-            {
-                this.Children = children;
-            }
+            this.Hash = this.ComputeHash($"{this.Path}\\{this.Name}");
+        }
 
-            if(parent != null)
+        private string ComputeHash(string fileName)
+        {
+            byte[] tempHash;
+            using (var md5 = MD5.Create())
+            using (var stream = File.OpenRead(fileName))
             {
-                this.Parent = parent;
+                tempHash = md5.ComputeHash(stream);
             }
+            return tempHash.ToString();
         }
     }
 }
