@@ -153,6 +153,7 @@
             // checkBox5
             // 
             this.checkBox5.AutoSize = true;
+            this.checkBox5.Enabled = false;
             this.checkBox5.Location = new System.Drawing.Point(7, 112);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(154, 17);
@@ -163,6 +164,7 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
+            this.checkBox4.Enabled = false;
             this.checkBox4.Location = new System.Drawing.Point(7, 89);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(151, 17);
