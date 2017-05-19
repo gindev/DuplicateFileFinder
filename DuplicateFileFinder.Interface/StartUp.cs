@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace DuplicateFileFinder.Interface
+namespace DuplicateFileFinder
 {
     static class StartUp
     {

@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuplicateFileFinder.Interface", "DuplicateFileFinder.Interface\DuplicateFileFinder.Interface.csproj", "{F4E4799C-883B-4B36-9DB9-3D6478499386}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuplicateFileFinder.Models", "DuplicateFileFinder.Models\DuplicateFileFinder.Models.csproj", "{E2E09164-7C59-423C-8925-9174EB053B35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuplicateFileFinder", "DuplicateFileFinder.Interface\DuplicateFileFinder.csproj", "{F4E4799C-883B-4B36-9DB9-3D6478499386}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{F4E4799C-883B-4B36-9DB9-3D6478499386}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4E4799C-883B-4B36-9DB9-3D6478499386}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4E4799C-883B-4B36-9DB9-3D6478499386}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2E09164-7C59-423C-8925-9174EB053B35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2E09164-7C59-423C-8925-9174EB053B35}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2E09164-7C59-423C-8925-9174EB053B35}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2E09164-7C59-423C-8925-9174EB053B35}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
