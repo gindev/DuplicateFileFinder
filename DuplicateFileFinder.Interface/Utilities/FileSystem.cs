@@ -3,16 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace DuplicateFileFinder.Utilities
 {
     public class FileSystem
     {
-        public static Dictionary<string, List<FileSystemEntity>> AllFiles { get; set; }
-
         // Recursive method scanning for files in folders
-        public static void TraverseDirectories(string directoryPath, HashSet<int> methods)
+        public static Dictionary<string, List<FileSystemEntity>> TraverseDirectories(string directoryPath, HashSet<int> methods)
         {
+            var hashedFiles = new Dictionary<string, List<FileSystemEntity>>();
             var files = GetFiles(directoryPath, methods);
             var directories = GetDirs(directoryPath);
 
@@ -20,19 +20,31 @@ namespace DuplicateFileFinder.Utilities
             {
                 if (file != null)
                 {
-                    if (!AllFiles.ContainsKey(file.Hash))
+                    if (!hashedFiles.ContainsKey(file.Hash))
                     {
-                        AllFiles.Add(file.Hash, new List<FileSystemEntity>());
+                        hashedFiles.Add(file.Hash, new List<FileSystemEntity>());
                     }
 
-                    AllFiles[file.Hash].Add(file);
+                    hashedFiles[file.Hash].Add(file);
                 }
             }
 
             foreach (var directory in directories)
             {
-                TraverseDirectories(directory, methods);
+                var list = TraverseDirectories(directory, methods);
+                foreach(var item in list)
+                {
+                    if (!hashedFiles.ContainsKey(item.Key))
+                    {
+                        hashedFiles.Add(item.Key,item.Value);
+                    }
+                    else
+                    {
+                        hashedFiles[item.Key].AddRange(item.Value);
+                    }
+                }
             }
+            return hashedFiles;
         }
 
         private static List<FileSystemEntity> GetFiles(string directoryPath, HashSet<int> methods)
@@ -47,10 +59,9 @@ namespace DuplicateFileFinder.Utilities
                 {
                     FileInfo fileInfo = new FileInfo(fileFound);
                     string fileName = fileFound.Split(new[] { @"\" }, StringSplitOptions.RemoveEmptyEntries).Last();
-                    var hash = HashGenerator.FileHash(fileName, directoryPath, methods);
-                    long size = fileInfo.Length;
-                    var file = new FileSystemEntity(fileName, directoryPath, hash, size);
-
+                    var file = new FileSystemEntity(fileName, directoryPath);
+                    file.Size = fileInfo.Length;
+                    file.Hash = HashGenerator.FileHash(file, methods);
                     filesFound.Add(file);
                 }
             }
@@ -80,11 +91,22 @@ namespace DuplicateFileFinder.Utilities
             }
             catch (Exception e)
             {
-                dirs = new string[0];
                 //ToDo: implement some sort of log to tell the user that not all folders were checked!
             }
 
             return dirsFound;
+        }
+
+        public static void FileDelete(string fileWithPath)
+        {
+            if (File.Exists($@"{fileWithPath}"))
+            {
+                File.Delete($@"{fileWithPath}");
+            }
+            else
+            {
+                MessageBox.Show($@"Unable to delete file:\n {fileWithPath}");
+            }
         }
     }
 }

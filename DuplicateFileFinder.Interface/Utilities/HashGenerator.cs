@@ -4,13 +4,13 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using DuplicateFileFinder.Enums;
+using DuplicateFileFinder.Models;
 
 namespace DuplicateFileFinder.Utilities
 {
     public static class HashGenerator
     {
-        #region HashGenerators
-        public static string FileHash(string fileName, string filePath, HashSet<int> methods)
+        public static string FileHash(FileSystemEntity file, HashSet<int> methods)
         {
             string fileNameHash = String.Empty;
             string fileContentHash = String.Empty;
@@ -22,12 +22,12 @@ namespace DuplicateFileFinder.Utilities
             {
                 if (method == (int)CompareMethods.Name)
                 {
-                    fileNameHash = CalculateMD5Hash(fileName);
+                    fileNameHash = CalculateMD5Hash(file.Name);
                 }
 
                 if (method == (int)CompareMethods.Content)
                 {
-                    using (FileStream fileStream = new FileStream($"{filePath}\\{fileName}", FileMode.Open))
+                    using (FileStream fileStream = new FileStream($"{file.Path}\\{file.Name}", FileMode.Open))
                     {
                         fileContentHash = CalculateMD5Hash(fileStream);
                     }
@@ -35,8 +35,8 @@ namespace DuplicateFileFinder.Utilities
 
                 if (method == (int)CompareMethods.Size)
                 {
-                    FileInfo fileInfo = new FileInfo($"{filePath}\\{fileName}");
-                    fileSizeHash = CalculateMD5Hash(fileInfo.Length.ToString());
+                    //FileInfo fileInfo = new FileInfo($"{file.Path}\\{file.Name}");
+                    fileSizeHash = CalculateMD5Hash(file.Size.ToString());
                 }
             }
 
@@ -77,7 +77,6 @@ namespace DuplicateFileFinder.Utilities
 
             return sb.ToString();
         }
-        #endregion
         
     }
 }

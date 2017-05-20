@@ -4,21 +4,21 @@
     {
         public string Name { get; private set; }
 
-        public string Hash { get; private set; }
+        public string Hash { get; set; }
 
         public string Path { get; private set; }
 
-        public long Size { get; private set; }
+        public long Size { get; set; }
 
-        public FileSystemEntity(string name, string path, string hash, long size)
+        public FileSystemEntity(string name, string path)
         {
             this.Name = name;
 
             this.Path = path;
 
-            this.Hash = hash;
+            this.Hash = string.Empty;
 
-            this.Size = size;
+            this.Size = 0;
         }
     }
 }

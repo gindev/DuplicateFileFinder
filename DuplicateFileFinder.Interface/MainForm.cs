@@ -3,7 +3,9 @@ using DuplicateFileFinder.Models;
 using DuplicateFileFinder.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DuplicateFileFinder
@@ -11,10 +13,12 @@ namespace DuplicateFileFinder
     public partial class MainForm : Form
     {
         public Dictionary<string, List<FileSystemEntity>> Duplicates { get; set; }
+        private Dictionary<string, List<FileSystemEntity>> AllFiles { get; set; }
 
         public MainForm()
         {
             this.Duplicates = new Dictionary<string, List<FileSystemEntity>>();
+            this.AllFiles = new Dictionary<string, List<FileSystemEntity>>();
 
             InitializeComponent();
 
@@ -29,11 +33,12 @@ namespace DuplicateFileFinder
                 this.groupBox2.Controls.Add(tmpCB);
             }
         }
-        
+
         // Initiates the scan for duplicates.
         private void btnAction_Click(object sender, EventArgs e)
         {
             this.Duplicates.Clear();
+            this.AllFiles.Clear();
             this.lvDuplicates.Items.Clear();
             this.lvDuplicates.Refresh();
 
@@ -62,22 +67,23 @@ namespace DuplicateFileFinder
                 MessageBox.Show("You have to select atleast one comparison method!");
                 return;
             }
-            
+
             //// Modify the interface for processing data.
             this.btnAction.Text = "Scanning...";
             InterfaceControl.DisableControls(
                 new HashSet<Control>()
                 {
                     this.btnAction,
+                    this.btnDelete,
                     this.btnReset,
                     this.btnExit,
                     this.btnFolder1
                 });
 
             //// Traverse file structure from the selected folder.
-            FileSystem.TraverseDirectories(this.tbFolder1.Text, methods);
+            //this.AllFiles = ;
 
-            foreach (var file in FileSystem.AllFiles)
+            foreach (var file in FileSystem.TraverseDirectories(this.tbFolder1.Text, methods))
             {
                 if (file.Value.Count > 1)
                 {
@@ -100,6 +106,10 @@ namespace DuplicateFileFinder
                     this.btnExit,
                     this.btnFolder1
                 });
+            if (this.lvDuplicates.Items.Count > 0)
+            {
+                this.btnDelete.Enabled = true;
+            }
         }
 
         // Select the folder to scan for duplicates.
@@ -141,6 +151,82 @@ namespace DuplicateFileFinder
         private void newSearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.btnReset_Click(sender, e);
+        }
+
+        private void lvDuplicates_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (this.lvDuplicates.FocusedItem != null && this.lvDuplicates.FocusedItem.Bounds.Contains(e.Location) == true)
+                {
+                    lvContextMenuStrip.Show(Cursor.Position);
+                }
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var listViewItem = this.lvDuplicates.FocusedItem;
+            string fileName = listViewItem.SubItems[0].Text;
+            string filePath = listViewItem.SubItems[1].Text;
+            Process openFile = new Process();
+            openFile.StartInfo.FileName = $@"{filePath}\{fileName}";
+            openFile.Start();
+        }
+
+        private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var listViewItem = this.lvDuplicates.FocusedItem;
+            string fileName = listViewItem.SubItems[0].Text;
+            string filePath = listViewItem.SubItems[1].Text;
+            Process openFileLocation = new Process();
+            openFileLocation.StartInfo.FileName = "explorer.exe";
+            openFileLocation.StartInfo.Arguments = $@"/e, /select, ""{filePath}\{fileName}""";
+            openFileLocation.Start();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var listViewItem = this.lvDuplicates.FocusedItem;
+            string fileName = listViewItem.SubItems[0].Text;
+            string filePath = listViewItem.SubItems[1].Text;
+
+            try
+            {
+                FileSystem.FileDelete($@"{filePath}\{fileName}");
+            }
+            catch (Exception ex)
+            {
+                // implement a message to the user
+                MessageBox.Show($@"{ex.Message}");
+            }
+            finally
+            {
+                if (!File.Exists($@"{filePath}\{fileName}"))
+                {
+                    this.lvDuplicates.Items.Remove(listViewItem);
+                }
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (this.lvDuplicates.SelectedItems.Count < 1)
+            {
+                MessageBox.Show("You have to select atleast one file to delete!");
+                return;
+            }
+
+            var itemsToDelete = this.lvDuplicates.SelectedItems;
+
+            foreach (var item in itemsToDelete)
+            {
+                string fileName = (item as ListViewItem).SubItems[0].Text;
+                string filePath = (item as ListViewItem).SubItems[1].Text;
+
+                FileSystem.FileDelete($@"{filePath}\{fileName}");
+                this.lvDuplicates.Items.Remove((item as ListViewItem));
+            }
         }
     }
 }

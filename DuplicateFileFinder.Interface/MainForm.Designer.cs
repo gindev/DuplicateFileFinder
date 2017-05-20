@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,12 +45,17 @@
             this.tbFolder1 = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lvDuplicates = new System.Windows.Forms.ListView();
-            this.btnDelete = new System.Windows.Forms.Button();
             this.colFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colFilePath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.lvContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.lvContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -75,14 +81,14 @@
             // newSearchToolStripMenuItem
             // 
             this.newSearchToolStripMenuItem.Name = "newSearchToolStripMenuItem";
-            this.newSearchToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.newSearchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newSearchToolStripMenuItem.Text = "New search";
             this.newSearchToolStripMenuItem.Click += new System.EventHandler(this.newSearchToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -185,6 +191,7 @@
             // 
             // lvDuplicates
             // 
+            this.lvDuplicates.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvDuplicates.BackColor = System.Drawing.SystemColors.Window;
             this.lvDuplicates.CheckBoxes = true;
             this.lvDuplicates.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -192,7 +199,6 @@
             this.colFilePath});
             this.lvDuplicates.FullRowSelect = true;
             this.lvDuplicates.GridLines = true;
-            this.lvDuplicates.HoverSelection = true;
             this.lvDuplicates.Location = new System.Drawing.Point(7, 20);
             this.lvDuplicates.Name = "lvDuplicates";
             this.lvDuplicates.Size = new System.Drawing.Size(648, 261);
@@ -200,16 +206,7 @@
             this.lvDuplicates.TabIndex = 0;
             this.lvDuplicates.UseCompatibleStateImageBehavior = false;
             this.lvDuplicates.View = System.Windows.Forms.View.Details;
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Enabled = false;
-            this.btnDelete.Location = new System.Drawing.Point(19, 553);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(95, 23);
-            this.btnDelete.TabIndex = 11;
-            this.btnDelete.Text = "Delete selected";
-            this.btnDelete.UseVisualStyleBackColor = true;
+            this.lvDuplicates.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvDuplicates_MouseClick);
             // 
             // colFileName
             // 
@@ -220,6 +217,47 @@
             // 
             this.colFilePath.Text = "File location";
             this.colFilePath.Width = 462;
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Enabled = false;
+            this.btnDelete.Location = new System.Drawing.Point(19, 553);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(95, 23);
+            this.btnDelete.TabIndex = 11;
+            this.btnDelete.Text = "Delete selected";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // lvContextMenuStrip
+            // 
+            this.lvContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.openFolderToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.lvContextMenuStrip.Name = "lvContextMenuStrip";
+            this.lvContextMenuStrip.Size = new System.Drawing.Size(140, 70);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // openFolderToolStripMenuItem
+            // 
+            this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
+            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.openFolderToolStripMenuItem.Text = "Open Folder";
+            this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -248,6 +286,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            this.lvContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -272,6 +311,10 @@
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.ColumnHeader colFileName;
         private System.Windows.Forms.ColumnHeader colFilePath;
+        private System.Windows.Forms.ContextMenuStrip lvContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
     }
 }
 
