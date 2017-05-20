@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DuplicateFileFinder")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Duplicate File Finder")]
+[assembly: AssemblyDescription("Finds duplicates of files within the selected folder")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DuplicateFileFinder")]
+[assembly: AssemblyCompany("GinDev.EU")]
+[assembly: AssemblyProduct("Duplicate File Finder")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("GinDev.EU")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
