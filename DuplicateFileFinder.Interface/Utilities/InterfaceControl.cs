@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DuplicateFileFinder.Utilities
 {
     public static class InterfaceControl
     {
-        public static string SelectFolder()
+        public static string SelectFolder(string folder)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = "Select forlder to scan for duplicates";

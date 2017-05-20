@@ -81,14 +81,14 @@
             // newSearchToolStripMenuItem
             // 
             this.newSearchToolStripMenuItem.Name = "newSearchToolStripMenuItem";
-            this.newSearchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newSearchToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.newSearchToolStripMenuItem.Text = "New search";
             this.newSearchToolStripMenuItem.Click += new System.EventHandler(this.newSearchToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -202,7 +202,6 @@
             this.lvDuplicates.Location = new System.Drawing.Point(7, 20);
             this.lvDuplicates.Name = "lvDuplicates";
             this.lvDuplicates.Size = new System.Drawing.Size(648, 261);
-            this.lvDuplicates.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvDuplicates.TabIndex = 0;
             this.lvDuplicates.UseCompatibleStateImageBehavior = false;
             this.lvDuplicates.View = System.Windows.Forms.View.Details;

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DuplicateFileFinder
@@ -27,7 +29,7 @@ namespace DuplicateFileFinder
             {
                 CheckBox tmpCB = new CheckBox();
                 tmpCB.Tag = i.ToString();
-                tmpCB.Text = $"Compare by {enums.GetValue(i).ToString()}";
+                tmpCB.Text = $"Compare by {enums.GetValue(i).ToString().ToLower()}";
                 tmpCB.AutoSize = true;
                 tmpCB.Location = new Point(10, 20 + i * 20);
                 this.groupBox2.Controls.Add(tmpCB);
@@ -35,7 +37,7 @@ namespace DuplicateFileFinder
         }
 
         // Initiates the scan for duplicates.
-        private void btnAction_Click(object sender, EventArgs e)
+        private async void btnAction_Click(object sender, EventArgs e)
         {
             this.Duplicates.Clear();
             this.AllFiles.Clear();
@@ -79,22 +81,26 @@ namespace DuplicateFileFinder
                     this.btnExit,
                     this.btnFolder1
                 });
-
+            
             //// Traverse file structure from the selected folder.
-            //this.AllFiles = ;
+            this.AllFiles = FileSystem.TraverseDirectories(this.tbFolder1.Text, methods);
+            int counter = 0;
 
-            foreach (var file in FileSystem.TraverseDirectories(this.tbFolder1.Text, methods))
+            foreach (var file in this.AllFiles.Where(x => x.Value.Count > 1))
             {
-                if (file.Value.Count > 1)
+                foreach (var item in file.Value)
                 {
-                    foreach (var item in file.Value)
-                    {
-                        ListViewItem lvItem = new ListViewItem(item.Name);
-                        lvItem.SubItems.Add(item.Path);
-                        this.lvDuplicates.Items.Add(lvItem);
-                    }
+                    ListViewItem lvItem = new ListViewItem(item.Name);
+                    lvItem.SubItems.Add(item.Path);
+                    this.lvDuplicates.Items.Add(lvItem);
+                }
+                counter++;
+                if(counter % 100 == 0)
+                {
+                    this.lvDuplicates.Refresh();
                 }
             }
+            this.lvDuplicates.Sorting = SortOrder.Ascending;
 
             //// Modify the interface (reset to default) after processing data is complete.
             this.btnAction.Text = "Search";
@@ -115,7 +121,7 @@ namespace DuplicateFileFinder
         // Select the folder to scan for duplicates.
         private void btnFolder1_Click(object sender, EventArgs e)
         {
-            string folder = InterfaceControl.SelectFolder();
+            string folder = InterfaceControl.SelectFolder(this.tbFolder1.Text);
             if (!string.IsNullOrEmpty(folder))
             {
                 this.tbFolder1.Text = folder;
@@ -209,7 +215,7 @@ namespace DuplicateFileFinder
             }
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
+        private async void btnDelete_Click(object sender, EventArgs e)
         {
             if (this.lvDuplicates.SelectedItems.Count < 1)
             {
@@ -224,8 +230,10 @@ namespace DuplicateFileFinder
                 string fileName = (item as ListViewItem).SubItems[0].Text;
                 string filePath = (item as ListViewItem).SubItems[1].Text;
 
-                FileSystem.FileDelete($@"{filePath}\{fileName}");
+                Task task = new Task(() => FileSystem.FileDelete($@"{filePath}\{fileName}"));
+                task.Start();
                 this.lvDuplicates.Items.Remove((item as ListViewItem));
+                task.Wait();
             }
         }
     }
