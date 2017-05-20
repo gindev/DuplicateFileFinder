@@ -8,9 +8,9 @@
 
         public string Path { get; private set; }
 
-        public uint Size { get; private set; }
+        public long Size { get; private set; }
 
-        public FileSystemEntity(string name, string path, string hash, uint size)
+        public FileSystemEntity(string name, string path, string hash, long size)
         {
             this.Name = name;
 

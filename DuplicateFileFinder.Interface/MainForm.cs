@@ -10,12 +10,10 @@ namespace DuplicateFileFinder
 {
     public partial class MainForm : Form
     {
-        public Dictionary<string, List<FileSystemEntity>> AllFiles { get; set; }
         public Dictionary<string, List<FileSystemEntity>> Duplicates { get; set; }
 
         public MainForm()
         {
-            this.AllFiles = new Dictionary<string, List<FileSystemEntity>>();
             this.Duplicates = new Dictionary<string, List<FileSystemEntity>>();
 
             InitializeComponent();
@@ -36,7 +34,6 @@ namespace DuplicateFileFinder
         private void btnAction_Click(object sender, EventArgs e)
         {
             this.Duplicates.Clear();
-            this.AllFiles.Clear();
             this.lvDuplicates.Items.Clear();
             this.lvDuplicates.Refresh();
 
@@ -78,9 +75,9 @@ namespace DuplicateFileFinder
                 });
 
             //// Traverse file structure from the selected folder.
-            FileSystem.TraverseDirectories(this.tbFolder1.Text, this.AllFiles, methods);
+            FileSystem.TraverseDirectories(this.tbFolder1.Text, methods);
 
-            foreach (var file in AllFiles)
+            foreach (var file in FileSystem.AllFiles)
             {
                 if (file.Value.Count > 1)
                 {

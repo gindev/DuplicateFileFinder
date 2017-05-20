@@ -3,80 +3,61 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DuplicateFileFinder.Utilities
 {
-    class FileSystem
+    public class FileSystem
     {
-        #region TraverseDirectories
-        /// <summary>
-        /// Traverse directories and subdirectories and list all files within.
-        /// </summary>
-        /// <param name="directoryPath">The current working directory</param>
-        /// <param name="foundFiles">Reference to a dictionary, containing all found files.</param>
-        /// <param name="methods">File comparison method.</param>
-        public static void TraverseDirectories(string directoryPath, Dictionary<string, List<FileSystemEntity>> foundFiles, HashSet<int> methods)
+        public static Dictionary<string, List<FileSystemEntity>> AllFiles { get; set; }
+
+        // Recursive method scanning for files in folders
+        public static void TraverseDirectories(string directoryPath, HashSet<int> methods)
         {
             var files = GetFiles(directoryPath, methods);
+            var directories = GetDirs(directoryPath);
 
-            foreach (var fileSystemEntity in files)
+            foreach (var file in files)
             {
-                if(fileSystemEntity == null)
+                if (file != null)
                 {
-                    continue;
-                }
+                    if (!AllFiles.ContainsKey(file.Hash))
+                    {
+                        AllFiles.Add(file.Hash, new List<FileSystemEntity>());
+                    }
 
-                if (!foundFiles.ContainsKey(fileSystemEntity.Hash))
-                {
-                    var list = new List<FileSystemEntity>();
-                    list.Add(fileSystemEntity);
-                    foundFiles.Add(fileSystemEntity.Hash, list);
-                    continue;
+                    AllFiles[file.Hash].Add(file);
                 }
-
-                foundFiles[fileSystemEntity.Hash].Add(fileSystemEntity);
             }
 
-            foreach (var subDirEntity in GetDirs(directoryPath))
+            foreach (var directory in directories)
             {
-                TraverseDirectories(subDirEntity, foundFiles, methods);
+                TraverseDirectories(directory, methods);
             }
         }
 
         private static List<FileSystemEntity> GetFiles(string directoryPath, HashSet<int> methods)
         {
             List<FileSystemEntity> filesFound = new List<FileSystemEntity>();
-
             string[] files;
+
             try
             {
                 files = Directory.GetFiles(directoryPath);
+                foreach (var fileFound in files)
+                {
+                    FileInfo fileInfo = new FileInfo(fileFound);
+                    string fileName = fileFound.Split(new[] { @"\" }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    var hash = HashGenerator.FileHash(fileName, directoryPath, methods);
+                    long size = fileInfo.Length;
+                    var file = new FileSystemEntity(fileName, directoryPath, hash, size);
+
+                    filesFound.Add(file);
+                }
             }
             catch (Exception e)
             {
-                files = new string[0];
                 //ToDo: Implement some sort of log to tell the user that not all files were checked!
             }
-
-            Parallel.ForEach(files, fileFound =>
-            {
-                string fileName = fileFound.Split(new[] { @"\" }, StringSplitOptions.RemoveEmptyEntries).Last();
-                var hash = HashGenerator.FileHash(fileName, directoryPath, methods);
-                uint size = 0;
-                var file = new FileSystemEntity(fileName, directoryPath, hash, size);
-
-                filesFound.Add(file);
-            });
-            //foreach (var fileFound in files)
-            //{
-            //    string fileName = fileFound.Split(new[] { @"\" }, StringSplitOptions.RemoveEmptyEntries).Last();
-            //    var hash = HashGenerator.FileHash(fileName, directoryPath, methods);
-            //    uint size = 0;
-            //    var file = new FileSystemEntity(fileName, directoryPath, hash, size);
-            //
-            //    filesFound.Add(file);
-            //}
 
             return filesFound;
         }
@@ -84,12 +65,18 @@ namespace DuplicateFileFinder.Utilities
         private static List<string> GetDirs(string directoryPath)
         {
             List<string> dirsFound = new List<string>();
-
             string[] dirs;
 
             try
             {
                 dirs = Directory.GetDirectories(directoryPath);
+                foreach (var dirFound in dirs)
+                {
+                    if (!dirsFound.Contains(dirFound))
+                    {
+                        dirsFound.Add(dirFound);
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -97,17 +84,7 @@ namespace DuplicateFileFinder.Utilities
                 //ToDo: implement some sort of log to tell the user that not all folders were checked!
             }
 
-            foreach (var dirFound in dirs)
-            {
-                if (!dirsFound.Contains(dirFound))
-                {
-                    dirsFound.Add(dirFound);
-                }
-                continue;
-            }
-
             return dirsFound;
         }
-        #endregion
     }
 }
