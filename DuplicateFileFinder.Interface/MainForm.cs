@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DuplicateFileFinder
@@ -16,11 +15,15 @@ namespace DuplicateFileFinder
     {
         public Dictionary<string, List<FileSystemEntity>> Duplicates { get; set; }
         private Dictionary<string, List<FileSystemEntity>> AllFiles { get; set; }
+        private HashSet<string> RemovedFiles { get; set; }
+        private HashSet<string> Errors { get; set; }
 
         public MainForm()
         {
             this.Duplicates = new Dictionary<string, List<FileSystemEntity>>();
             this.AllFiles = new Dictionary<string, List<FileSystemEntity>>();
+            this.RemovedFiles = new HashSet<string>();
+            this.Errors = new HashSet<string>();
 
             InitializeComponent();
 
@@ -37,12 +40,15 @@ namespace DuplicateFileFinder
         }
 
         // Initiates the scan for duplicates.
-        private async void btnAction_Click(object sender, EventArgs e)
+        private void btnAction_Click(object sender, EventArgs e)
         {
             this.Duplicates.Clear();
             this.AllFiles.Clear();
+            this.RemovedFiles.Clear();
+            this.Errors.Clear();
             this.lvDuplicates.Items.Clear();
             this.lvDuplicates.Refresh();
+
 
             //// Check to see if the user has selected a folder to scan for duplicates
             if (string.IsNullOrEmpty(this.tbFolder1.Text))
@@ -81,7 +87,7 @@ namespace DuplicateFileFinder
                     this.btnExit,
                     this.btnFolder1
                 });
-            
+
             //// Traverse file structure from the selected folder.
             this.AllFiles = FileSystem.TraverseDirectories(this.tbFolder1.Text, methods);
             int counter = 0;
@@ -95,7 +101,7 @@ namespace DuplicateFileFinder
                     this.lvDuplicates.Items.Add(lvItem);
                 }
                 counter++;
-                if(counter % 100 == 0)
+                if (counter % 100 == 0)
                 {
                     this.lvDuplicates.Refresh();
                 }
@@ -215,7 +221,7 @@ namespace DuplicateFileFinder
             }
         }
 
-        private async void btnDelete_Click(object sender, EventArgs e)
+        private void btnDelete_Click(object sender, EventArgs e)
         {
             if (this.lvDuplicates.SelectedItems.Count < 1)
             {
@@ -223,18 +229,41 @@ namespace DuplicateFileFinder
                 return;
             }
 
-            var itemsToDelete = this.lvDuplicates.SelectedItems;
+            var itemsToDelete = this.lvDuplicates.CheckedItems;
 
+            this.lvDuplicates.Sorting = SortOrder.None;
             foreach (var item in itemsToDelete)
             {
                 string fileName = (item as ListViewItem).SubItems[0].Text;
                 string filePath = (item as ListViewItem).SubItems[1].Text;
 
-                Task task = new Task(() => FileSystem.FileDelete($@"{filePath}\{fileName}"));
-                task.Start();
+                var result = FileSystem.FileDelete($@"{filePath}\{fileName}");
+
+                if (result.Key == false)
+                {
+                    if (!this.Errors.Contains(result.Value))
+                    {
+                        this.Errors.Add(result.Value);
+                    }
+                }
+
                 this.lvDuplicates.Items.Remove((item as ListViewItem));
-                task.Wait();
+                this.RemovedFiles.Add($@"{filePath}\{fileName}");
+
             }
+            this.lvDuplicates.Sorting = SortOrder.Ascending;
+
+            string errorMessage = String.Empty;
+            if (this.Errors.Count > 0)
+            {
+                errorMessage = $" {this.Errors.Count} error(s) occurred while removing file(s).";
+            }
+            MessageBox.Show($"{this.RemovedFiles.Count - this.Errors.Count} file(s) removed successfuly.{errorMessage}", "Result");
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Developed by:\n\nVasil Aleksandrov - 97-itsr\nPanayot Gindev - 96-itsr", "About Duplicate File Finder");
         }
     }
 }

@@ -5,13 +5,12 @@ using System.Security.Cryptography;
 using System.Text;
 using DuplicateFileFinder.Enums;
 using DuplicateFileFinder.Models;
-using System.Threading.Tasks;
 
 namespace DuplicateFileFinder.Utilities
 {
     public static class HashGenerator
     {
-        public async static Task<string> FileHash(FileSystemEntity file, HashSet<int> methods)
+        public static string FileHash(FileSystemEntity file, HashSet<int> methods)
         {
             string fileNameHash = String.Empty;
             string fileContentHash = String.Empty;
@@ -23,27 +22,27 @@ namespace DuplicateFileFinder.Utilities
             {
                 if (method == (int)CompareMethods.Name)
                 {
-                    fileNameHash = await CalculateMD5Hash(file.Name);
+                    fileNameHash = CalculateMD5Hash(file.Name);
                 }
 
                 if (method == (int)CompareMethods.Content)
                 {
                     using (FileStream fileStream = new FileStream($"{file.Path}\\{file.Name}", FileMode.Open))
                     {
-                        fileContentHash = await CalculateMD5Hash(fileStream);
+                        fileContentHash = CalculateMD5Hash(fileStream);
                     }
                 }
 
                 if (method == (int)CompareMethods.Size)
                 {
-                    fileSizeHash = await CalculateMD5Hash(file.Size.ToString());
+                    fileSizeHash = CalculateMD5Hash(file.Size.ToString());
                 }
             }
 
-            return await CalculateMD5Hash($"{fileNameHash}{fileContentHash}{fileSizeHash}");
+            return CalculateMD5Hash($"{fileNameHash}{fileContentHash}{fileSizeHash}");
         }
 
-        private async static Task<string> CalculateMD5Hash(string input)
+        private static string CalculateMD5Hash(string input)
         {
             // step 1, calculate MD5 hash from input
             MD5 md5 = MD5.Create();
@@ -60,7 +59,7 @@ namespace DuplicateFileFinder.Utilities
             return sb.ToString();
         }
 
-        private async static Task<string> CalculateMD5Hash(FileStream input)
+        private static string CalculateMD5Hash(FileStream input)
         {
             // step 1, calculate MD5 hash from input
             MD5 md5 = MD5.Create();

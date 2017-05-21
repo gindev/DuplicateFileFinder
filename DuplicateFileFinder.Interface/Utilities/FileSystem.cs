@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DuplicateFileFinder.Utilities
@@ -15,9 +14,8 @@ namespace DuplicateFileFinder.Utilities
         public static Dictionary<string, List<FileSystemEntity>> TraverseDirectories(string directoryPath, HashSet<int> methods)
         {
             var hashedFiles = new Dictionary<string, List<FileSystemEntity>>();
-
-            Task<List<FileSystemEntity>> filesTask = GetFiles(directoryPath, methods);
-            List<FileSystemEntity> files = filesTask.Result/*GetFiles(directoryPath, methods)*/;
+            
+            List<FileSystemEntity> files = GetFiles(directoryPath, methods);
             List<string> directories = GetDirs(directoryPath);
 
             foreach (var directory in directories)
@@ -53,7 +51,7 @@ namespace DuplicateFileFinder.Utilities
         }
 
         [STAThread]
-        private async static Task<List<FileSystemEntity>> GetFiles(string directoryPath, HashSet<int> methods)
+        private static List<FileSystemEntity> GetFiles(string directoryPath, HashSet<int> methods)
         {
             List<FileSystemEntity> filesFound = new List<FileSystemEntity>();
             string[] files;
@@ -67,7 +65,7 @@ namespace DuplicateFileFinder.Utilities
                     string fileName = fileFound.Split(new[] { @"\" }, StringSplitOptions.RemoveEmptyEntries).Last();
                     var file = new FileSystemEntity(fileName, directoryPath);
                     file.Size = fileInfo.Length;
-                    file.Hash = await HashGenerator.FileHash(file, methods);
+                    file.Hash = HashGenerator.FileHash(file, methods);
                     filesFound.Add(file);
                 }
             }
@@ -104,16 +102,35 @@ namespace DuplicateFileFinder.Utilities
             return dirsFound;
         }
 
-        public static void FileDelete(string fileWithPath)
+        public static KeyValuePair<bool, string> FileDelete(string fileWithPath)
         {
+            string message = "ok";
+            bool state = false;
+            KeyValuePair<bool, string> result = new KeyValuePair<bool, string>(false, message);
+
             if (File.Exists($@"{fileWithPath}"))
             {
-                File.Delete($@"{fileWithPath}");
+                try
+                {
+                    File.Delete($@"{fileWithPath}");
+                    state = true;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                    state = false;
+                }
+                finally
+                {
+                    result = new KeyValuePair<bool, string>(state, message);
+                }
             }
             else
             {
-                MessageBox.Show($@"Unable to delete file:\n {fileWithPath}");
+                MessageBox.Show($@"The file specified does not exists:\n {fileWithPath}");
+                
             }
+            return result;
         }
     }
 }
