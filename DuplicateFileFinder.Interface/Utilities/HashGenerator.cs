@@ -10,6 +10,7 @@ namespace DuplicateFileFinder.Utilities
 {
     public static class HashGenerator
     {
+        // Calculates hash for the file given based on hash method/parameter
         public static string FileHash(FileSystemEntity file, HashSet<int> methods)
         {
             string fileNameHash = String.Empty;
@@ -42,6 +43,7 @@ namespace DuplicateFileFinder.Utilities
             return CalculateMD5Hash($"{fileNameHash}{fileContentHash}{fileSizeHash}");
         }
 
+        // Helper method for calculates hash based on input string
         private static string CalculateMD5Hash(string input)
         {
             // step 1, calculate MD5 hash from input
@@ -59,7 +61,8 @@ namespace DuplicateFileFinder.Utilities
             return sb.ToString();
         }
 
-        private static string CalculateMD5Hash(Stream input)
+        // Helper method for calculates hash based on input file stream
+        private static string CalculateMD5Hash(FileStream input)
         {
             // step 1, calculate MD5 hash from input
             MD5 md5 = MD5.Create();

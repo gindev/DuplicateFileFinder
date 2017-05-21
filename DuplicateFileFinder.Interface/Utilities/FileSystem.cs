@@ -50,6 +50,7 @@ namespace DuplicateFileFinder.Utilities
             return hashedFiles;
         }
 
+        // Gets all files in given directory path
         [STAThread]
         private static List<FileSystemEntity> GetFiles(string directoryPath, HashSet<int> methods)
         {
@@ -77,6 +78,7 @@ namespace DuplicateFileFinder.Utilities
             return filesFound;
         }
 
+        // Gets all directories in given directory path
         [STAThread]
         private static List<string> GetDirs(string directoryPath)
         {
@@ -102,6 +104,8 @@ namespace DuplicateFileFinder.Utilities
             return dirsFound;
         }
 
+        // Deletes given file
+        [STAThread]
         public static KeyValuePair<bool, string> FileDelete(string fileWithPath)
         {
             string message = "ok";

@@ -150,21 +150,25 @@ namespace DuplicateFileFinder
             this.btnFolder1_Click(sender, e);
         }
 
+        // Exits the application from ToolStripMenu
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.btnExit_Click(sender, e);
         }
 
+        // Exits the application from Exit button
         private void btnExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        // Resets all search options to the initial state
         private void newSearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.btnReset_Click(sender, e);
         }
 
+        // Opens context menu at the selected item position
         private void lvDuplicates_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -176,6 +180,7 @@ namespace DuplicateFileFinder
             }
         }
 
+        // Opens the selected file from the context menu strip
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var listViewItem = this.lvDuplicates.FocusedItem;
@@ -186,6 +191,7 @@ namespace DuplicateFileFinder
             openFile.Start();
         }
 
+        // Opens the folder of the selected file from the context menu strip
         private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var listViewItem = this.lvDuplicates.FocusedItem;
@@ -197,6 +203,7 @@ namespace DuplicateFileFinder
             openFileLocation.Start();
         }
 
+        // Deletes the selected file from the context menu strip
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var listViewItem = this.lvDuplicates.FocusedItem;
@@ -221,6 +228,7 @@ namespace DuplicateFileFinder
             }
         }
 
+        // Deletes all selected (checked) files from the ListView
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (this.lvDuplicates.SelectedItems.Count < 1)
@@ -261,6 +269,7 @@ namespace DuplicateFileFinder
             MessageBox.Show($"{this.RemovedFiles.Count - this.Errors.Count} file(s) removed successfuly.{errorMessage}", "Result");
         }
 
+        // Opens the about MessageBox from the Menu Strip
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Developed by:\n\nVasil Aleksandrov - 97-itsr\nPanayot Gindev - 96-itsr", "About Duplicate File Finder");

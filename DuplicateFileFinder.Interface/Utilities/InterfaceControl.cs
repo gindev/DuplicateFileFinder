@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DuplicateFileFinder.Utilities
 {
     public static class InterfaceControl
     {
+        // Generates OpenFolderDialog and selects working folder
         public static string SelectFolder(string folder)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -21,6 +20,7 @@ namespace DuplicateFileFinder.Utilities
             return null;
         }
 
+        // Resets the checkbox controls given as collection
         public static void ResetControls(Control.ControlCollection controlsCollection)
         {
             foreach (var control in controlsCollection)
@@ -29,6 +29,7 @@ namespace DuplicateFileFinder.Utilities
             }
         }
 
+        // Disable controls given as collection
         public static void DisableControls(HashSet<Control> controls)
         {
             foreach (var control in controls)
@@ -37,6 +38,7 @@ namespace DuplicateFileFinder.Utilities
             }
         }
 
+        // Enable controls given as collection
         public static void EnableControls(HashSet<Control> controls)
         {
             foreach (var control in controls)
