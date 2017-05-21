@@ -59,7 +59,7 @@ namespace DuplicateFileFinder.Utilities
             return sb.ToString();
         }
 
-        private static string CalculateMD5Hash(FileStream input)
+        private static string CalculateMD5Hash(Stream input)
         {
             // step 1, calculate MD5 hash from input
             MD5 md5 = MD5.Create();
