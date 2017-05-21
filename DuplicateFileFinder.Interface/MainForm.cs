@@ -82,10 +82,12 @@ namespace DuplicateFileFinder
                 new HashSet<Control>()
                 {
                     this.btnAction,
-                    this.btnDelete,
+                    this.btnDeleteChecked,
+                    this.btnDeleteSelected,
                     this.btnReset,
                     this.btnExit,
-                    this.btnFolder1
+                    this.btnFolder1,
+                    this.btnSelectAll
                 });
 
             //// Traverse file structure from the selected folder.
@@ -120,7 +122,9 @@ namespace DuplicateFileFinder
                 });
             if (this.lvDuplicates.Items.Count > 0)
             {
-                this.btnDelete.Enabled = true;
+                this.btnDeleteChecked.Enabled = true;
+                this.btnDeleteSelected.Enabled = true;
+                this.btnSelectAll.Enabled = true;
             }
         }
 
@@ -138,6 +142,7 @@ namespace DuplicateFileFinder
         private void btnReset_Click(object sender, EventArgs e)
         {
             InterfaceControl.ResetControls(this.groupBox2.Controls);
+            InterfaceControl.DisableControls(new HashSet<Control> { this.btnDeleteSelected, btnDeleteChecked, btnSelectAll });
             this.tbFolder1.Text = "";
             this.lvDuplicates.Items.Clear();
         }
@@ -210,16 +215,13 @@ namespace DuplicateFileFinder
             string fileName = listViewItem.SubItems[0].Text;
             string filePath = listViewItem.SubItems[1].Text;
 
-            try
+            var result = FileSystem.FileDelete($@"{filePath}\{fileName}");
+
+            if (result.Key == false)
             {
-                FileSystem.FileDelete($@"{filePath}\{fileName}");
+                MessageBox.Show(result.Value, "Unable to delete!");
             }
-            catch (Exception ex)
-            {
-                // implement a message to the user
-                MessageBox.Show($@"{ex.Message}");
-            }
-            finally
+            else
             {
                 if (!File.Exists($@"{filePath}\{fileName}"))
                 {
@@ -237,10 +239,9 @@ namespace DuplicateFileFinder
                 return;
             }
 
-            var itemsToDelete = this.lvDuplicates.CheckedItems;
-
             this.lvDuplicates.Sorting = SortOrder.None;
-            foreach (var item in itemsToDelete)
+
+            foreach (var item in this.lvDuplicates.CheckedItems)
             {
                 string fileName = (item as ListViewItem).SubItems[0].Text;
                 string filePath = (item as ListViewItem).SubItems[1].Text;
@@ -254,28 +255,54 @@ namespace DuplicateFileFinder
                         this.Errors.Add(result.Value);
                     }
                 }
-
-                this.lvDuplicates.Items.Remove((item as ListViewItem));
-                this.RemovedFiles.Add($@"{filePath}\{fileName}");
-
+                else
+                {
+                    this.lvDuplicates.Items.Remove((item as ListViewItem));
+                    this.RemovedFiles.Add($@"{filePath}\{fileName}");
+                }
+                (item as ListViewItem).Checked = false;
             }
-            this.lvDuplicates.Sorting = SortOrder.Ascending;
 
             string errorMessage = String.Empty;
             if (this.Errors.Count > 0)
             {
                 errorMessage = $" {this.Errors.Count} error(s) occurred while removing file(s).";
             }
-            MessageBox.Show($"{this.RemovedFiles.Count - this.Errors.Count} file(s) removed successfuly.{errorMessage}", "Result");
+
+            MessageBox.Show($"{this.RemovedFiles.Count} file(s) removed successfuly.{errorMessage}", "Result");
 
             this.RemovedFiles.Clear();
             this.Errors.Clear();
+            this.lvDuplicates.Sorting = SortOrder.Ascending;
+            this.lvDuplicates.Refresh();
         }
 
         // Opens the about MessageBox from the Menu Strip
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Developed by:\n\nVasil Aleksandrov - 97-itsr\nPanayot Gindev - 96-itsr", "About Duplicate File Finder");
+        }
+
+
+        private void btnDeleteSelected_Click(object sender, EventArgs e)
+        {
+            this.deleteToolStripMenuItem_Click(sender, e);
+        }
+
+        private void deleteCheckedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.btnDelete_Click(sender, e);
+        }
+
+        private void btnSelectAll_Click(object sender, EventArgs e)
+        {
+            if(this.lvDuplicates.Items.Count > 0)
+            {
+                foreach (var item in this.lvDuplicates.Items)
+                {
+                    (item as ListViewItem).Checked = true;
+                }
+            }
         }
     }
 }

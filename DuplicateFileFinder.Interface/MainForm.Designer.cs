@@ -47,11 +47,14 @@
             this.lvDuplicates = new System.Windows.Forms.ListView();
             this.colFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colFilePath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnDeleteChecked = new System.Windows.Forms.Button();
             this.lvContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnDeleteSelected = new System.Windows.Forms.Button();
+            this.deleteCheckedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSelectAll = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -103,7 +106,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -218,46 +221,76 @@
             this.colFilePath.Text = "File location";
             this.colFilePath.Width = 462;
             // 
-            // btnDelete
+            // btnDeleteChecked
             // 
-            this.btnDelete.Enabled = false;
-            this.btnDelete.Location = new System.Drawing.Point(19, 553);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(95, 23);
-            this.btnDelete.TabIndex = 11;
-            this.btnDelete.Text = "Delete selected";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            this.btnDeleteChecked.Enabled = false;
+            this.btnDeleteChecked.Location = new System.Drawing.Point(20, 553);
+            this.btnDeleteChecked.Name = "btnDeleteChecked";
+            this.btnDeleteChecked.Size = new System.Drawing.Size(95, 23);
+            this.btnDeleteChecked.TabIndex = 11;
+            this.btnDeleteChecked.Text = "Delete Checked";
+            this.btnDeleteChecked.UseVisualStyleBackColor = true;
+            this.btnDeleteChecked.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // lvContextMenuStrip
             // 
             this.lvContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.openFolderToolStripMenuItem,
-            this.deleteToolStripMenuItem});
+            this.deleteToolStripMenuItem,
+            this.deleteCheckedToolStripMenuItem});
             this.lvContextMenuStrip.Name = "lvContextMenuStrip";
-            this.lvContextMenuStrip.Size = new System.Drawing.Size(140, 70);
+            this.lvContextMenuStrip.Size = new System.Drawing.Size(157, 92);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // openFolderToolStripMenuItem
             // 
             this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
-            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.openFolderToolStripMenuItem.Text = "Open Folder";
             this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.deleteToolStripMenuItem.Text = "Delete Selected";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // btnDeleteSelected
+            // 
+            this.btnDeleteSelected.Enabled = false;
+            this.btnDeleteSelected.Location = new System.Drawing.Point(135, 553);
+            this.btnDeleteSelected.Name = "btnDeleteSelected";
+            this.btnDeleteSelected.Size = new System.Drawing.Size(95, 23);
+            this.btnDeleteSelected.TabIndex = 12;
+            this.btnDeleteSelected.Text = "Delete Selected";
+            this.btnDeleteSelected.UseVisualStyleBackColor = true;
+            this.btnDeleteSelected.Click += new System.EventHandler(this.btnDeleteSelected_Click);
+            // 
+            // deleteCheckedToolStripMenuItem
+            // 
+            this.deleteCheckedToolStripMenuItem.Name = "deleteCheckedToolStripMenuItem";
+            this.deleteCheckedToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.deleteCheckedToolStripMenuItem.Text = "Delete Checked";
+            this.deleteCheckedToolStripMenuItem.Click += new System.EventHandler(this.deleteCheckedToolStripMenuItem_Click);
+            // 
+            // btnSelectAll
+            // 
+            this.btnSelectAll.Enabled = false;
+            this.btnSelectAll.Location = new System.Drawing.Point(250, 553);
+            this.btnSelectAll.Name = "btnSelectAll";
+            this.btnSelectAll.Size = new System.Drawing.Size(95, 23);
+            this.btnSelectAll.TabIndex = 13;
+            this.btnSelectAll.Text = "Select All";
+            this.btnSelectAll.UseVisualStyleBackColor = true;
+            this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
             // 
             // MainForm
             // 
@@ -268,7 +301,9 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.CancelButton = this.btnExit;
             this.ClientSize = new System.Drawing.Size(685, 588);
-            this.Controls.Add(this.btnDelete);
+            this.Controls.Add(this.btnSelectAll);
+            this.Controls.Add(this.btnDeleteSelected);
+            this.Controls.Add(this.btnDeleteChecked);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnReset);
@@ -278,6 +313,7 @@
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Duplicate File Finder";
@@ -308,13 +344,16 @@
         private System.Windows.Forms.TextBox tbFolder1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ListView lvDuplicates;
-        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnDeleteChecked;
         private System.Windows.Forms.ColumnHeader colFileName;
         private System.Windows.Forms.ColumnHeader colFilePath;
         private System.Windows.Forms.ContextMenuStrip lvContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.Button btnDeleteSelected;
+        private System.Windows.Forms.ToolStripMenuItem deleteCheckedToolStripMenuItem;
+        private System.Windows.Forms.Button btnSelectAll;
     }
 }
 
