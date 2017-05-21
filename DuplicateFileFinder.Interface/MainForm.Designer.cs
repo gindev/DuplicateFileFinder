@@ -52,8 +52,8 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnDeleteSelected = new System.Windows.Forms.Button();
             this.deleteCheckedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnDeleteSelected = new System.Windows.Forms.Button();
             this.btnSelectAll = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -263,6 +263,13 @@
             this.deleteToolStripMenuItem.Text = "Delete Selected";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
+            // deleteCheckedToolStripMenuItem
+            // 
+            this.deleteCheckedToolStripMenuItem.Name = "deleteCheckedToolStripMenuItem";
+            this.deleteCheckedToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.deleteCheckedToolStripMenuItem.Text = "Delete Checked";
+            this.deleteCheckedToolStripMenuItem.Click += new System.EventHandler(this.deleteCheckedToolStripMenuItem_Click);
+            // 
             // btnDeleteSelected
             // 
             this.btnDeleteSelected.Enabled = false;
@@ -273,13 +280,6 @@
             this.btnDeleteSelected.Text = "Delete Selected";
             this.btnDeleteSelected.UseVisualStyleBackColor = true;
             this.btnDeleteSelected.Click += new System.EventHandler(this.btnDeleteSelected_Click);
-            // 
-            // deleteCheckedToolStripMenuItem
-            // 
-            this.deleteCheckedToolStripMenuItem.Name = "deleteCheckedToolStripMenuItem";
-            this.deleteCheckedToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.deleteCheckedToolStripMenuItem.Text = "Delete Checked";
-            this.deleteCheckedToolStripMenuItem.Click += new System.EventHandler(this.deleteCheckedToolStripMenuItem_Click);
             // 
             // btnSelectAll
             // 
@@ -312,6 +312,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "MainForm";

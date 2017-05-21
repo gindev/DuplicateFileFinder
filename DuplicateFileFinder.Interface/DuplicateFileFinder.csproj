@@ -49,6 +49,9 @@
   <PropertyGroup>
     <StartupObject>DuplicateFileFinder.StartUp</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Zoom.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -114,6 +117,8 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Zoom.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
