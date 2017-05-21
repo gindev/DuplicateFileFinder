@@ -231,7 +231,7 @@ namespace DuplicateFileFinder
         // Deletes all selected (checked) files from the ListView
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (this.lvDuplicates.SelectedItems.Count < 1)
+            if (this.lvDuplicates.CheckedItems.Count < 1)
             {
                 MessageBox.Show("You have to select atleast one file to delete!");
                 return;
@@ -267,6 +267,9 @@ namespace DuplicateFileFinder
                 errorMessage = $" {this.Errors.Count} error(s) occurred while removing file(s).";
             }
             MessageBox.Show($"{this.RemovedFiles.Count - this.Errors.Count} file(s) removed successfuly.{errorMessage}", "Result");
+
+            this.RemovedFiles.Clear();
+            this.Errors.Clear();
         }
 
         // Opens the about MessageBox from the Menu Strip
