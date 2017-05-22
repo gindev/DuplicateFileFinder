@@ -92,6 +92,7 @@ namespace DuplicateFileFinder
                 {
                     ListViewItem lvItem = new ListViewItem(item.Name);
                     lvItem.SubItems.Add(item.Path);
+                    lvItem.Tag = item;
                     this.lvDuplicates.Items.Add(lvItem);
                 }
                 counter++;
@@ -204,10 +205,9 @@ namespace DuplicateFileFinder
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var listViewItem = this.lvDuplicates.FocusedItem;
-            string fileName = listViewItem.SubItems[0].Text;
-            string filePath = listViewItem.SubItems[1].Text;
-
-            var result = FileSystem.FileDelete($@"{filePath}\{fileName}");
+            var fileSystemEntity = (listViewItem.Tag as FileSystemEntity);
+            
+            var result = fileSystemEntity.FileDelete();
 
             if (result.Key == false)
             {
@@ -215,7 +215,7 @@ namespace DuplicateFileFinder
             }
             else
             {
-                if (!File.Exists($@"{filePath}\{fileName}"))
+                if (!File.Exists($@"{fileSystemEntity.Path}\{fileSystemEntity.Name}"))
                 {
                     this.lvDuplicates.Items.Remove(listViewItem);
                 }
@@ -236,12 +236,11 @@ namespace DuplicateFileFinder
 
             this.lvDuplicates.Sorting = SortOrder.None;
 
-            foreach (var item in this.lvDuplicates.CheckedItems)
+            foreach (ListViewItem item in this.lvDuplicates.CheckedItems)
             {
-                string fileName = (item as ListViewItem).SubItems[0].Text;
-                string filePath = (item as ListViewItem).SubItems[1].Text;
+                var fileSystemEntity = (item.Tag as FileSystemEntity);
 
-                var result = FileSystem.FileDelete($@"{filePath}\{fileName}");
+                var result = fileSystemEntity.FileDelete();
 
                 if (result.Key == false)
                 {
@@ -252,10 +251,10 @@ namespace DuplicateFileFinder
                 }
                 else
                 {
-                    this.lvDuplicates.Items.Remove((item as ListViewItem));
-                    RemovedFiles.Add($@"{filePath}\{fileName}");
+                    this.lvDuplicates.Items.Remove(item);
+                    RemovedFiles.Add($@"{fileSystemEntity.Path}\{fileSystemEntity.Name}");
                 }
-                (item as ListViewItem).Checked = false;
+                item.Checked = false;
             }
 
             string errorMessage = String.Empty;

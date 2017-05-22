@@ -104,37 +104,37 @@ namespace DuplicateFileFinder.Utilities
             return dirsFound;
         }
 
-        // Deletes given file
-        [STAThread]
-        public static KeyValuePair<bool, string> FileDelete(string fileWithPath)
-        {
-            string message = "ok";
-            bool state = false;
-            KeyValuePair<bool, string> result = new KeyValuePair<bool, string>(false, message);
-
-            if (File.Exists($@"{fileWithPath}"))
-            {
-                try
-                {
-                    File.Delete($@"{fileWithPath}");
-                    state = true;
-                }
-                catch (Exception ex)
-                {
-                    message = ex.Message;
-                    state = false;
-                }
-                finally
-                {
-                    result = new KeyValuePair<bool, string>(state, message);
-                }
-            }
-            else
-            {
-                MessageBox.Show($@"The file specified does not exists:\n {fileWithPath}");
-                
-            }
-            return result;
-        }
+        //// Deletes given file
+        //[STAThread]
+        //public static KeyValuePair<bool, string> FileDelete(string fileWithPath)
+        //{
+        //    string message = "ok";
+        //    bool state = false;
+        //    KeyValuePair<bool, string> result = new KeyValuePair<bool, string>(false, message);
+        //
+        //    if (File.Exists($@"{fileWithPath}"))
+        //    {
+        //        try
+        //        {
+        //            File.Delete($@"{fileWithPath}");
+        //            state = true;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            message = ex.Message;
+        //            state = false;
+        //        }
+        //        finally
+        //        {
+        //            result = new KeyValuePair<bool, string>(state, message);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show($@"The file specified does not exists:\n {fileWithPath}");
+        //        
+        //    }
+        //    return result;
+        //}
     }
 }
