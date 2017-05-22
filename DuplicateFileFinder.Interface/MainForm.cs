@@ -13,17 +13,12 @@ namespace DuplicateFileFinder
 {
     public partial class MainForm : Form
     {
-        public Dictionary<string, List<FileSystemEntity>> Duplicates { get; set; }
         private Dictionary<string, List<FileSystemEntity>> AllFiles { get; set; }
-        private HashSet<string> RemovedFiles { get; set; }
-        private HashSet<string> Errors { get; set; }
+
 
         public MainForm()
         {
-            this.Duplicates = new Dictionary<string, List<FileSystemEntity>>();
             this.AllFiles = new Dictionary<string, List<FileSystemEntity>>();
-            this.RemovedFiles = new HashSet<string>();
-            this.Errors = new HashSet<string>();
 
             InitializeComponent();
 
@@ -42,10 +37,7 @@ namespace DuplicateFileFinder
         // Initiates the scan for duplicates.
         private void btnAction_Click(object sender, EventArgs e)
         {
-            this.Duplicates.Clear();
             this.AllFiles.Clear();
-            this.RemovedFiles.Clear();
-            this.Errors.Clear();
             this.lvDuplicates.Items.Clear();
             this.lvDuplicates.Refresh();
 
@@ -233,6 +225,9 @@ namespace DuplicateFileFinder
         // Deletes all selected (checked) files from the ListView
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            HashSet<string> RemovedFiles = new HashSet<string>();
+            HashSet<string> Errors = new HashSet<string>();
+
             if (this.lvDuplicates.CheckedItems.Count < 1)
             {
                 MessageBox.Show("You have to select atleast one file to delete!");
@@ -250,29 +245,27 @@ namespace DuplicateFileFinder
 
                 if (result.Key == false)
                 {
-                    if (!this.Errors.Contains(result.Value))
+                    if (!Errors.Contains(result.Value))
                     {
-                        this.Errors.Add(result.Value);
+                        Errors.Add(result.Value);
                     }
                 }
                 else
                 {
                     this.lvDuplicates.Items.Remove((item as ListViewItem));
-                    this.RemovedFiles.Add($@"{filePath}\{fileName}");
+                    RemovedFiles.Add($@"{filePath}\{fileName}");
                 }
                 (item as ListViewItem).Checked = false;
             }
 
             string errorMessage = String.Empty;
-            if (this.Errors.Count > 0)
+            if (Errors.Count > 0)
             {
-                errorMessage = $" {this.Errors.Count} error(s) occurred while removing file(s).";
+                errorMessage = $" {Errors.Count} error(s) occurred while removing file(s).";
             }
 
-            MessageBox.Show($"{this.RemovedFiles.Count} file(s) removed successfuly.{errorMessage}", "Result");
-
-            this.RemovedFiles.Clear();
-            this.Errors.Clear();
+            MessageBox.Show($"{RemovedFiles.Count} file(s) removed successfuly.{errorMessage}", "Result");
+            
             this.lvDuplicates.Sorting = SortOrder.Ascending;
             this.lvDuplicates.Refresh();
         }
@@ -294,14 +287,35 @@ namespace DuplicateFileFinder
             this.btnDelete_Click(sender, e);
         }
 
+
         private void btnSelectAll_Click(object sender, EventArgs e)
         {
-            if(this.lvDuplicates.Items.Count > 0)
+            if (this.lvDuplicates.Items.Count > 0)
             {
+                bool state;
+                string label;
+                if (this.btnSelectAll.Tag == null || this.btnSelectAll.Tag.Equals("Select All"))
+                {
+                    this.btnSelectAll.Tag = "Deselect All";
+                    label = "Deselect All";
+                    state = true;
+                }
+                else
+                {
+                    this.btnSelectAll.Tag = "Select All";
+                    label = "Select All";
+                    state = false;
+                }
+
                 foreach (var item in this.lvDuplicates.Items)
                 {
-                    (item as ListViewItem).Checked = true;
+                    (item as ListViewItem).Checked = state;
                 }
+                this.btnSelectAll.Text = label;
+            }
+            else
+            {
+                MessageBox.Show("There is nothing to select!", "Warning");
             }
         }
     }
